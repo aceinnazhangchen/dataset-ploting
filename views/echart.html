@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+        <div id="main" style="height: 100%"></div>
+        <script type="text/javascript" src="/static/js/echarts.min.js"></script>
+        <script type="text/javascript">
+            var myChart = echarts.init(document.getElementById('main'));
+                var data1 = '{{xAxis}}';
+                var data2 = '{{series}}';
+                var xAxis = data1.split(',');
+                var series = data2.split(',');
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '{{filename}}',
+                        subtext: 'version: {{version}}',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            animation: false,
+                            label: {
+                                backgroundColor: '#ccc',
+                                borderColor: '#aaa',
+                                borderWidth: 1,
+                                shadowBlur: 0,
+                                shadowOffsetX: 0,
+                                shadowOffsetY: 0,
+                                textStyle: {
+                                    color: '#222'
+                                }
+                            }
+                        },
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    legend: {
+                        data:['m']
+                    },
+                    xAxis: {
+                        name:"m",
+                        boundaryGap: false,
+                        data:xAxis,
+                        splitLine:{show: false},//去除网格线
+                        type : 'category',
+                        splitArea : {show : true}//保留网格区域
+                    },
+                    yAxis: {
+                        name:"percent",
+                        splitLine:{show: false},//去除网格线
+                        type : 'value',
+                        splitArea : {show : true}//保留网格区域
+                    },
+                    series: [{
+                        name: 'percent',
+                        type: 'line',
+                        showSymbol: false,
+                        data: series
+                    }]
+                };
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+                window.onresize = function () {
+                    myChart.resize();
+                }
+        </script>
+   </body>
+</html>

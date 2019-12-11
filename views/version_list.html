@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ul>
+                    {% for item in list %}
+                    <li><a href="/list?ver={{ item }}">{{ item }}</a> </li>
+                    {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
