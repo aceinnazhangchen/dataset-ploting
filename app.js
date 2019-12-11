@@ -36,5 +36,5 @@ app.use(templating('views', {
 //app.use(router.routes());
 app.use(controller());
 
-app.listen(3000);
-console.log('app started at port 3000...');
+app.listen(9690);
+console.log('app started at port 9690...');
