@@ -1,3 +1,4 @@
+var path = require('path');
 const file_sys = require('../utils/file_sys');
 
 const interval = 0.005;

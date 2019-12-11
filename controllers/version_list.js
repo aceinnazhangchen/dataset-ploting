@@ -1,3 +1,4 @@
+var path = require('path');
 const file_sys = require('../utils/file_sys');
 
 var fn_version_list = async (ctx, next) => {
