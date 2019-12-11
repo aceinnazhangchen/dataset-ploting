@@ -1,24 +1,6 @@
-const path = require("path");
-const fs = require("fs");
+const file_sys = require('../utils/file_sys');
 
 const interval = 0.005;
-
-const readFile = function (src) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(src, (err, data) => {
-            if (err) reject(err);
-            resolve(data);
-        });
-    });
-}
-
-const fileExists = function (src) {
-    return new Promise((resolve, reject) => {
-        fs.exists(src, (exists) => {
-            resolve(exists);
-        });
-    });
-}
 
 var fn_echart = async (ctx, next) => {
     var version = ctx.query.ver;
@@ -29,13 +11,13 @@ var fn_echart = async (ctx, next) => {
         return;
     }
     var file_path = path.join(process.cwd(),"date",version,filename);
-    let exist = await fileExists(file_path);
+    let exist = await file_sys.fileExists(file_path);
     if (!exist){
         let msg = "Can't find file "+ filename + " !";
         await ctx.render('error.html', {title: 'error',msg});
         return;
     }
-    let content = await readFile(file_path);
+    let content = await file_sys.readFile(file_path);
     let lines = content.toString().split('\n');
     console.log(lines.length);
     var offList = [];

@@ -1,9 +1,11 @@
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const controller = require('./controller');
-const nunjucks = require('nunjucks');
 let staticFiles = require('./static-files');
 let templating = require('./templating');
+const file_sys = require('./utils/file_sys');
+
+file_sys.mkdirPath("date");
 
 const app = new Koa();
 const isProduction = process.env.NODE_ENV === 'production';
