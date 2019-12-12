@@ -36,17 +36,17 @@
                                 }
                             }
                         },
+                        formatter: function (params) {
+                            return params[0].name + 'cm <br />' + parseFloat(params[0].value).toFixed(2) + "%";
+                        }
                     },
                     toolbox: {
                         feature: {
                             saveAsImage: {}
                         }
                     },
-                    legend: {
-                        data:['m']
-                    },
                     xAxis: {
-                        name:"m",
+                        name:"cm",
                         boundaryGap: false,
                         data:xAxis,
                         splitLine:{show: false},//去除网格线
@@ -54,7 +54,7 @@
                         splitArea : {show : true}//保留网格区域
                     },
                     yAxis: {
-                        name:"percent",
+                        name:"percent(%)",
                         splitLine:{show: false},//去除网格线
                         type : 'value',
                         splitArea : {show : true}//保留网格区域

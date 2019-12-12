@@ -68,7 +68,7 @@ var fn_echart = async (ctx, next) => {
         }
     }
     for (let k in map ) {
-        xAxis.push((k*interval).toFixed(3));
+        xAxis.push((100*k*interval).toFixed(1));
         series.push(100*map[k]/offList.length);
     }
     await ctx.render('echart.html',{filename,version,xAxis,series});
