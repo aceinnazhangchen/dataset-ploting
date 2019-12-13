@@ -158,8 +158,13 @@ a {
   background-color: transparent;
 }
 
+a:visited {
+  color: #7100b3;x
+  text-decoration: underline;
+}
+
 a:hover {
-  color: #0056b3;
+  color: #0003b3;
   text-decoration: underline;
 }
 

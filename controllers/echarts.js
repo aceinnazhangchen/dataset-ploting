@@ -35,7 +35,7 @@ var fn_echart = async (ctx, next) => {
         }
         let ref_fix =  parseFloat(array[13]);
         let rov_fix =  parseFloat(array[14]);
-        if(ref_fix != 4){
+        if(ref_fix != 4 || (rov_fix!=4 && rov_fix !=5)){
             continue;
         }
         let E = parseFloat(array[4]);

@@ -2,10 +2,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+                <a href="/"> Back home page </a>
             <ul>
-                    {% for item in list %}
-                    <li><a href="/echart?ver={{version}}&file={{ item }}" target="_blank">{{ item }}</a> </li>
-                    {% endfor %}
+                {% for item in list %}
+                <li><a href="/echart?ver={{version}}&file={{ item }}" target="_blank">{{ item }}</a> </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
