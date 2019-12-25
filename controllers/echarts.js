@@ -11,7 +11,7 @@ var fn_echart = async (ctx, next) => {
         await ctx.render('error.html', {title: 'error',msg});
         return;
     }
-    var file_path = path.join(process.cwd(),"date",version,filename);
+    var file_path = path.join(appRoot,"date",version,filename);
     let exist = await file_sys.fileExists(file_path);
     if (!exist){
         let msg = "Can't find file "+ filename + " !";

@@ -2,7 +2,7 @@ var path = require('path');
 const file_sys = require('../utils/file_sys');
 
 var fn_version_list = async (ctx, next) => {
-    var pathName = path.join(process.cwd(),"date");
+    var pathName = path.join(appRoot,"date");
     console.log(pathName);
     let {err,data} = await file_sys.readDir(pathName);
     if(err){

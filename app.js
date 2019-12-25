@@ -4,8 +4,13 @@ const controller = require('./controller');
 let staticFiles = require('./static-files');
 let templating = require('./templating');
 const file_sys = require('./utils/file_sys');
+var path = require('path');
 
-file_sys.mkdirPath("date");
+global.appRoot = path.resolve(__dirname);
+
+var dataPath = path.join(appRoot,"date");
+
+file_sys.mkdirsSync(dataPath);
 
 const app = new Koa();
 const isProduction = process.env.NODE_ENV === 'production';

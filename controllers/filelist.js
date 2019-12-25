@@ -3,7 +3,7 @@ const file_sys = require('../utils/file_sys');
 
 var fn_file_list = async (ctx, next) => {
     var version = ctx.query.ver;
-    var pathName = path.join(process.cwd(),"date",version);
+    var pathName = path.join(appRoot,"date",version);
     console.log(pathName);
     let {err,data} = await file_sys.readDir(pathName);
     if(err){
