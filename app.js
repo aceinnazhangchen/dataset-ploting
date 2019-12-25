@@ -34,7 +34,7 @@ app.use(async (ctx, next) => {
 // add router middleware:
 app.use(staticFiles('/static/', __dirname + '/static'));
 app.use(bodyParser());
-app.use(templating('views', {
+app.use(templating(__dirname + '/views', {
     noCache: !isProduction,
     watch: !isProduction
 }));
