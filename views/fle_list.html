@@ -3,11 +3,15 @@
     <div class="row">
         <div class="col-md-12">
                 <a href="/"> Back home page </a>
-            <ul>
+            <table>
                 {% for item in list %}
-                <li><a href="/echart?ver={{version}}&file={{ item }}" target="_blank">{{ item }}</a> </li>
+                <tr>
+                    <td>{{ item }}</td>
+                    <td><a href="/cdf?ver={{version}}&file={{ item }}" target="_blank">[CDF]</a></td>
+                    <td><a href="/sd?ver={{version}}&file={{ item }}" target="_blank">[SD]</a></td>
+                </tr>
                 {% endfor %}
-            </ul>
+            </table>
         </div>
     </div>
 </div>

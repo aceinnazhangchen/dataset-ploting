@@ -24,7 +24,7 @@ app.on('error', (err, ctx) => {
 });
 
 app.use(async (ctx, next) => {
-    console.log(`${ctx.request.method} ${ctx.request.url}`); // 打印URL
+    console.log(`${ctx.request.method} ${ctx.request.url}`);
     const start = new Date().getTime(); // 当前时间
     await next(); // 调用下一个middleware
     const execTime = new Date().getTime() - start; // 耗费时间
