@@ -81,7 +81,7 @@ var fn_cdf_echart = async (ctx, next) => {
     }
     var table_data = {};
     table_data.RMS = Math.sqrt(square_sum/offList.length).toFixed(3);
-    table_data.fixedRate = Math.sqrt(rov_fix_count/ref_fix_count).toFixed(3)*100;
+    table_data.fixedRate = (Math.sqrt(rov_fix_count/ref_fix_count)*100).toFixed(3);
     console.log(table_data);
     for (let k in map ) {
         xAxis.push((100*k*interval).toFixed(1));
