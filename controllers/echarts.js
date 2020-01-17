@@ -81,11 +81,19 @@ var fn_cdf_echart = async (ctx, next) => {
     }
     var table_data = {};
     table_data.RMS = Math.sqrt(square_sum/offList.length).toFixed(3);
-    table_data.fixedRate = (Math.sqrt(rov_fix_count/ref_fix_count)*100).toFixed(3);
+    table_data.fixedRate = (Math.sqrt(rov_fix_count/ref_fix_count)*100).toFixed(2);
     console.log(table_data);
     for (let k in map ) {
-        xAxis.push((100*k*interval).toFixed(1));
-        series.push(100*map[k]/offList.length);
+        let x = (100*k*interval).toFixed(1);
+        let y = 100*map[k]/offList.length;
+        if(y >= 68 && table_data.R68 == undefined){
+            table_data.R68 = x;  
+        }
+        if(y >= 95 && table_data.R95 == undefined){
+            table_data.R95 = x;  
+        }
+        xAxis.push(x);
+        series.push(y);
     }
     await ctx.render('echart_cdf.html',{filename,version,xAxis,series,table_data});
 };
