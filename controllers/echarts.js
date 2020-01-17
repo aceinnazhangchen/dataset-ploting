@@ -6,7 +6,7 @@ const interval = 0.005;
 var fn_cdf_echart = async (ctx, next) => {
     var version = ctx.query.ver;
     var filename = ctx.query.file;
-    if(filename == undefined){
+    if(filename == undefined){SPARTN
         let msg = "No file name!";
         await ctx.render('error.html', {title: 'error',msg});
         return;
@@ -80,14 +80,14 @@ var fn_cdf_echart = async (ctx, next) => {
         }
     }
     var table_data = {};
-    table_data.RMS = Math.sqrt(square_sum/offList.length);
-    table_data.fixedRate = Math.sqrt(rov_fix_count/ref_fix_count);
+    table_data.RMS = Math.sqrt(square_sum/offList.length).toFixed(3);
+    table_data.fixedRate = Math.sqrt(rov_fix_count/ref_fix_count).toFixed(3)*100;
     console.log(table_data);
     for (let k in map ) {
         xAxis.push((100*k*interval).toFixed(1));
         series.push(100*map[k]/offList.length);
     }
-    await ctx.render('echart_cdf.html',{filename,version,xAxis,series});
+    await ctx.render('echart_cdf.html',{filename,version,xAxis,series,table_data});
 };
 
 var fn_sd_echart = async (ctx, next) => {
