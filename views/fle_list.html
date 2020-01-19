@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block main %}
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" >
                 <a href="/"> Back home page </a>
             <table>
                 {% for item in list %}
@@ -9,6 +9,7 @@
                     <td>{{ item }}</td>
                     <td><a href="/cdf?ver={{version}}&file={{ item }}" target="_blank">[CDF]</a></td>
                     <td><a href="/sd?ver={{version}}&file={{ item }}" target="_blank">[SD]</a></td>
+                    <td><a href="/compare?file={{ item }}" target="_blank">[Compare]</a></td>
                 </tr>
                 {% endfor %}
             </table>

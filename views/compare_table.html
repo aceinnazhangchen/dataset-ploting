@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table  border="1">
+                {% for item in table %}
+                <tr>
+                    <td>{{ item.version }},</td>
+                    <td>{{ item.RMS }},</td>
+                    <td>{{ item.fixedRate }},</td>
+                    <td>{{ item.R68 }},</td>
+                    <td>{{ item.R95 }},</td>
+                    <td>{{ item.gross_error }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
