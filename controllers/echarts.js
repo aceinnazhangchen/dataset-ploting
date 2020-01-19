@@ -51,9 +51,11 @@ var fn_cdf_echart = async (ctx, next) => {
         let E = parseFloat(array[4]);
         let N = parseFloat(array[5]);
         let square = E*E+N*N;
-        square_sum += square;
         let offset = Math.sqrt(square);
-        offList.push(offset);
+        if(offset <= 2){
+            square_sum += square;
+            offList.push(offset);
+        }
     }
     offList.sort();
     var m = 0;
@@ -91,6 +93,14 @@ var fn_cdf_echart = async (ctx, next) => {
         }
         if(y >= 95 && table_data.R95 == undefined){
             table_data.R95 = x;  
+        }
+        if(k == map.length -1){
+            if(table_data.R68 == undefined){
+                 table_data.R68 = x;
+            }
+            if(table_data.R95 == undefined) {
+                table_data.R95 = x; 
+            }
         }
         xAxis.push(x);
         series.push(y);

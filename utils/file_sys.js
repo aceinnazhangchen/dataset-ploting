@@ -1,7 +1,6 @@
 var path = require('path');
 var fs = require("fs");
 
-
 function mkdirsSync(dirname) {
     if (fs.existsSync(dirname)) {
         return true;
@@ -38,10 +37,20 @@ const readDir = function (src) {
     });
 }
 
+const fileStat = function(src){
+    return new Promise((resolve, reject) => {
+        fs.stat(src, (err, info) => {
+            if (err) reject(err);
+            resolve(info);
+        });
+    });
+}
+
 module.exports = {
     mkdirsSync,
     fileExists,
     readFile,
     readDir,
+    fileStat,
 };
   

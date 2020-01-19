@@ -4,7 +4,7 @@
         <div class="col-md-12">
             <ul>
                     {% for item in list %}
-                    <li><a href="/list?ver={{ item }}">{{ item }}</a> </li>
+                    <li>{{ item.time }} <a href="/list?ver={{ item.name }}">{{ item.name }}</a> </li>
                     {% endfor %}
             </ul>
         </div>
