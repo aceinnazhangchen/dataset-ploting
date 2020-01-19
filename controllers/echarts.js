@@ -28,6 +28,7 @@ var fn_cdf_echart = async (ctx, next) => {
     var square_sum = 0;
     var ref_fix_count = 0;
     var rov_fix_count = 0;
+    var larger_than_2m = 0;
     for(let i = 0;i < lines.length;i++){
         if(lines[i].trim()==""){
             continue;
@@ -55,6 +56,8 @@ var fn_cdf_echart = async (ctx, next) => {
         if(offset <= 2){
             square_sum += square;
             offList.push(offset);
+        }else{
+            larger_than_2m++;
         }
     }
     offList.sort();
@@ -84,6 +87,7 @@ var fn_cdf_echart = async (ctx, next) => {
     var table_data = {};
     table_data.RMS = Math.sqrt(square_sum/offList.length).toFixed(3);
     table_data.fixedRate = (Math.sqrt(rov_fix_count/ref_fix_count)*100).toFixed(2);
+    table_data.gross_error = (larger_than_2m/(offList.length+larger_than_2m)*100).toFixed(2);
     console.log(table_data);
     for (let k in map ) {
         let x = (100*k*interval).toFixed(1);

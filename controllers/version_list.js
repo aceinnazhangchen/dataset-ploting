@@ -7,15 +7,15 @@ var fn_version_list = async (ctx, next) => {
     var pathName = path.join(appRoot,"date");
     console.log(pathName);
     let {err,data} = await file_sys.readDir(pathName);
-    var list = [];
+    var file_list = [];
     for(let i in data){
         //let info = fs.stat(path.join(pathName,file));
         console.log("version",path.join(pathName,data[i]));
         let info = await file_sys.fileStat(path.join(pathName,data[i]));
         //console.log(info);
-        list.push({name:data[i],timeSec:info.birthtimeMs,time:moment(info.birthtimeMs).format('YYYY-MM-DD HH:mm:ss')});
+        file_list.push({name:data[i],timeSec:info.birthtimeMs,time:moment(info.birthtimeMs).format('YYYY-MM-DD HH:mm:ss')});
     }
-    list = list.sort(utils.keysort('timeSec',false));
+    var list = file_list.sort(utils.keysort('timeSec',false));
     if(err){
         let msg = "search dir "+ pathName + " error !";
         await ctx.render('error.html', {title: 'error',msg});
