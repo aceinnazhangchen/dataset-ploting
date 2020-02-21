@@ -24,6 +24,7 @@ var fn_file_list = async (ctx, next) => {
         var list = [];
         for(let i in data){
             let info = await file_sys.fileStat(path.join(pathName,data[i]));
+            if(info.isDirectory() == false && path.extname(data[i]) != ".dif") continue;
             list.push({name:data[i],dir:info.isDirectory()});
         }
         await ctx.render('fle_list.html', {title: 'List',set,version,parent,list});
