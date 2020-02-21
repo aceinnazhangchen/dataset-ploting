@@ -2,14 +2,19 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12" >
-                <a href="/"> Back home page </a>
+                <a href="/version?set={{set}}"> Back home page </a></br>
+                <a href="javascript:window.history.back(-1)">:\\{{parent}}</a>
             <table>
                 {% for item in list %}
                 <tr>
-                    <td>{{ item }}</td>
-                    <td><a href="/cdf?ver={{version}}&file={{ item }}" target="_blank">[CDF]</a></td>
-                    <td><a href="/sd?ver={{version}}&file={{ item }}" target="_blank">[SD]</a></td>
-                    <td><a href="/compare?file={{ item }}" target="_blank">[Compare]</a></td>
+                    {% if item.dir %}
+                        <td><a href="/list?set={{set}}&ver={{version}}&parent={{parent}}&dir={{item.name}}">{{ item.name }}</a></td>
+                    {% else %}
+                        <td>{{ item.name }}</td>
+                        <td><a href="/cdf?set={{set}}&ver={{version}}&parent={{parent}}&file={{ item.name }}" target="_blank">[CDF]</a></td>
+                        <td><a href="/sd?set={{set}}&ver={{version}}&parent={{parent}}&file={{ item.name }}" target="_blank">[SD]</a></td>
+                        <td><a href="/compare?set={{set}}&parent={{parent}}&file={{ item.name }}" target="_blank">[Compare]</a></td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </table>

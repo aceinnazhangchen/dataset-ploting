@@ -2,8 +2,19 @@ var path = require('path');
 const file_sys = require('../utils/file_sys');
 const utils = require('../utils/');
 const moment = require('moment');
+const config = require('../config.json');
 
 const interval = 0.005;
+
+function getSetPath(set){
+    var setPath = "";
+    if(set == "tesla"){
+        setPath = config.tesla_set;
+    }else{
+        setPath = config.data_set;
+    }
+    return setPath;
+}
 
 function parseDiff(content,offList,out_data){
     let lines = content.toString().split('\n');
@@ -102,6 +113,7 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series){
 }
 
 var fn_cdf_echart = async (ctx, next) => {
+    var setPath = getSetPath(ctx.query.set);
     var version = ctx.query.ver;
     var filename = ctx.query.file;
     if(filename == undefined){
@@ -109,7 +121,8 @@ var fn_cdf_echart = async (ctx, next) => {
         await ctx.render('error.html', {title: 'error',msg});
         return;
     }
-    var file_path = path.join(appRoot,"date",version,filename);
+    var parent = ctx.query.parent || "";
+    var file_path = path.join(setPath,version,parent,filename);
     let exist = await file_sys.fileExists(file_path);
     if (!exist){
         let msg = "Can't find file "+ filename + " !";
@@ -130,6 +143,7 @@ var fn_cdf_echart = async (ctx, next) => {
 };
 
 var fn_sd_echart = async (ctx, next) => {
+    var setPath = getSetPath(ctx.query.set);
     var version = ctx.query.ver;
     var filename = ctx.query.file;
     if(filename == undefined){
@@ -137,7 +151,8 @@ var fn_sd_echart = async (ctx, next) => {
         await ctx.render('error.html', {title: 'error',msg});
         return;
     }
-    var file_path = path.join(appRoot,"date",version,filename);
+    var parent = ctx.query.parent || "";
+    var file_path = path.join(setPath,version,parent,filename);
     let exist = await file_sys.fileExists(file_path);
     if (!exist){
         let msg = "Can't find file "+ filename + " !";
@@ -181,8 +196,9 @@ var fn_sd_echart = async (ctx, next) => {
 
 var fn_compare = async (ctx, next) => {
     var filename = ctx.query.file;
-    var rootpath = path.join(appRoot,"date");
+    var rootpath = getSetPath(ctx.query.set);
     console.log(rootpath);
+    var parent = ctx.query.parent || "";
     let {err,data} = await file_sys.readDir(rootpath);
     if(err){
         let msg = "search dir "+ pathName + " error !";
@@ -202,7 +218,7 @@ var fn_compare = async (ctx, next) => {
             if(version.substr(0,8) == "res_msvc"){
                 continue;
             }
-            var file_path = path.join(appRoot,"date",version,filename);
+            var file_path = path.join(rootpath,version,parent,filename);
             let exist = await file_sys.fileExists(file_path);
             if (!exist){
                 continue;

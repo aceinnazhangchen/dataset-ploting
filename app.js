@@ -16,11 +16,11 @@ const app = new Koa();
 const isProduction = process.env.NODE_ENV === 'production';
 
 app.on('error', err => {
-    log.error('server error', err)
+    console.error('server error', err)
 });
 
 app.on('error', (err, ctx) => {
-    log.error('server error', err, ctx)
+    console.error('server error', err, ctx)
 });
 
 app.use(async (ctx, next) => {
