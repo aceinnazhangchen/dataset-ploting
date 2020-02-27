@@ -3,6 +3,7 @@ const file_sys = require('../utils/file_sys');
 const utils = require('../utils/');
 const moment = require('moment');
 const config = require('../config.json');
+var util = require('util');
 
 const interval = 0.005;
 
@@ -186,7 +187,14 @@ var fn_sd_echart = async (ctx, next) => {
            continue;
         }
         offList.push(offset);
-        timeList.push(array[0]);
+
+        let time = array[1].split('.')[0].trim();
+        if(time.length < 6){
+            let zero = "000000";
+            time = zero.substr(0,6-time.length)+time;
+        }
+        let timef = time.substr(0,2)+":"+time.substr(2,2)+":"+time.substr(4,2)
+        timeList.push(timef);
     }
 
     xAxis = timeList;
