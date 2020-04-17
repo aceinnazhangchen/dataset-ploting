@@ -29,9 +29,9 @@ function parseDiff(content,offList,out_data){
         }
         let ref_fix =  parseFloat(array[13]);
         let rov_fix =  parseFloat(array[14]);
-        if(ref_fix != 4 || (rov_fix!=4 && rov_fix !=5)){
+//        if(ref_fix != 4 || (rov_fix!=4 && rov_fix !=5)){
 //            continue;
-        }
+//        }
         if(ref_fix == 4){
             out_data.ref_fix_count++;
         }
@@ -45,7 +45,7 @@ function parseDiff(content,offList,out_data){
         let offset = Math.sqrt(square);
         if(offset > 2){
             out_data.larger_than_2m++;
-            continue;
+            //continue;
         }
         out_data.square_sum += square;
         offList.push(offset);
