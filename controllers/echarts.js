@@ -81,7 +81,7 @@ function createCDFMap(offList,map){
 
 function generateTableData(map,offList,out_data,table_data,xAxis,series){
     table_data.RMS = Math.sqrt(out_data.square_sum/offList.length).toFixed(3);
-    table_data.fixedRate = (Math.sqrt(out_data.rov_fix_count/offList.length)*100).toFixed(2);
+    table_data.fixedRate = (out_data.rov_fix_count/offList.length*100).toFixed(2);
     table_data.gross_error = (out_data.larger_than_2m/(offList.length+out_data.larger_than_2m)*100).toFixed(2);
     console.log(table_data);
     for (let k in map ) {
