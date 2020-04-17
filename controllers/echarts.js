@@ -17,8 +17,7 @@ function getSetPath(set){
     return setPath;
 }
 
-function parseDiff(content,offList,out_data){
-    let lines = content.toString().split('\n');
+function parseDiff(lines,offList,out_data){
     for(let i = 0;i < lines.length;i++){
         if(lines[i].trim()==""){
             continue;
@@ -29,9 +28,9 @@ function parseDiff(content,offList,out_data){
         }
         let ref_fix =  parseFloat(array[13]);
         let rov_fix =  parseFloat(array[14]);
-//        if(ref_fix != 4 || (rov_fix!=4 && rov_fix !=5)){
-//            continue;
-//        }
+        if(ref_fix != 4 || rov_fix <= 1){
+            continue;
+        }
         if(ref_fix == 4){
             out_data.ref_fix_count++;
         }
@@ -45,7 +44,6 @@ function parseDiff(content,offList,out_data){
         let offset = Math.sqrt(square);
         if(offset > 2){
             out_data.larger_than_2m++;
-            //continue;
         }
         out_data.square_sum += square;
         offList.push(offset);
@@ -56,10 +54,10 @@ function parseDiff(content,offList,out_data){
 function createCDFMap(offList,map){
     var m = 0;
     for(let n in offList){
-        if(offList[n] > 2)
-        {
-            break;
-        }
+        // if(offList[n] > 2)
+        // {
+        //     break;
+        // }
         if(offList[n] <= interval*m){
             if(map[m] == undefined){
                 map[m]=1;
@@ -79,9 +77,9 @@ function createCDFMap(offList,map){
     }
 }
 
-function generateTableData(map,offList,out_data,table_data,xAxis,series){
+function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
     table_data.RMS = Math.sqrt(out_data.square_sum/offList.length).toFixed(3);
-    table_data.fixedRate = (out_data.rov_fix_count/offList.length*100).toFixed(2);
+    table_data.fixedRate = (out_data.rov_fix_count/len*100).toFixed(2);
     table_data.gross_error = (out_data.larger_than_2m/(offList.length+out_data.larger_than_2m)*100).toFixed(2);
     console.log(table_data);
     for (let k in map ) {
@@ -107,10 +105,11 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series){
         rov_fix_count:0,
         larger_than_2m:0
     };
-    parseDiff(content,offList,out_data);
+    let lines = content.toString().split('\n');
+    parseDiff(lines,offList,out_data);
     var map = {0:0};
     createCDFMap(offList,map);
-    generateTableData(map,offList,out_data,table_data,xAxis,series);
+    generateTableData(map,offList,out_data,table_data,xAxis,series,lines.length);
 }
 
 var fn_cdf_echart = async (ctx, next) => {
