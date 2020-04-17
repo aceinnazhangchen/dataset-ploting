@@ -30,7 +30,7 @@ function parseDiff(content,offList,out_data){
         let ref_fix =  parseFloat(array[13]);
         let rov_fix =  parseFloat(array[14]);
         if(ref_fix != 4 || (rov_fix!=4 && rov_fix !=5)){
-            continue;
+//            continue;
         }
         if(ref_fix == 4){
             out_data.ref_fix_count++;
@@ -81,7 +81,7 @@ function createCDFMap(offList,map){
 
 function generateTableData(map,offList,out_data,table_data,xAxis,series){
     table_data.RMS = Math.sqrt(out_data.square_sum/offList.length).toFixed(3);
-    table_data.fixedRate = (Math.sqrt(out_data.rov_fix_count/out_data.ref_fix_count)*100).toFixed(2);
+    table_data.fixedRate = (Math.sqrt(out_data.rov_fix_count/offList.length)*100).toFixed(2);
     table_data.gross_error = (out_data.larger_than_2m/(offList.length+out_data.larger_than_2m)*100).toFixed(2);
     console.log(table_data);
     for (let k in map ) {
@@ -176,7 +176,7 @@ var fn_sd_echart = async (ctx, next) => {
         let ref_fix =  parseFloat(array[13]);
         let rov_fix =  parseFloat(array[14]);
         if(ref_fix != 4 || (rov_fix!=4 && rov_fix !=5)){
-            continue;
+//            continue;
         }
         
         let E = parseFloat(array[4]);
