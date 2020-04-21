@@ -95,6 +95,7 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
             table_data.R95 = x;  
         }
         last_y = y;
+        last_k = k;
         xAxis.push(x);
         series.push(y);
     }
