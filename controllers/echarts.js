@@ -98,7 +98,7 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
         xAxis.push(x);
         series.push(y);
     }
-    while(last_k < range_limit/interval){
+    while(last_k <= range_limit/interval){
         last_k++;
         let x = (100*last_k*interval).toFixed(1);
         xAxis.push(x);
