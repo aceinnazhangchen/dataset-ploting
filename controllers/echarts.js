@@ -6,6 +6,7 @@ const config = require('../config.json');
 var util = require('util');
 
 const interval = 0.005;
+const range_limit = 5;
 
 function getSetPath(set){
     var setPath = "";
@@ -54,10 +55,10 @@ function parseDiff(lines,offList,out_data){
 function createCDFMap(offList,map){
     var m = 0;
     for(let n in offList){
-        // if(offList[n] > 2)
-        // {
-        //     break;
-        // }
+        if(offList[n] > range_limit)
+        {
+            break;
+        }
         if(offList[n] <= interval*m){
             if(map[m] == undefined){
                 map[m]=1;
@@ -82,6 +83,8 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
     table_data.fixedRate = (out_data.rov_fix_count/len*100).toFixed(2);
     table_data.gross_error = (out_data.larger_than_2m/(offList.length+out_data.larger_than_2m)*100).toFixed(2);
     console.log(table_data);
+    var last_y = 0;
+    var last_k = 0;
     for (let k in map ) {
         let x = (100*k*interval).toFixed(1);
         let y = 100*map[k]/offList.length;
@@ -91,8 +94,15 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
         if(y >= 95 && table_data.R95 == 0){
             table_data.R95 = x;  
         }
+        last_y = y;
         xAxis.push(x);
         series.push(y);
+    }
+    while(last_k < range_limit/interval){
+        last_k++;
+        let x = (100*last_k*interval).toFixed(1);
+        xAxis.push(x);
+        series.push(last_y);
     }
 }
 
