@@ -29,15 +29,15 @@ function parseDiff(lines,offList,out_data){
         }
         let ref_fix =  parseFloat(array[13]);
         let rov_fix =  parseFloat(array[14]);
-        if(ref_fix != 4 || rov_fix <= 1){
-            continue;
-        }
         if(ref_fix == 4){
             out_data.ref_fix_count++;
         }
         if(rov_fix == 4){
             out_data.rov_fix_count++;
         }  
+        if(ref_fix != 4 || rov_fix <= 1){
+            continue;
+        }
 
         let E = parseFloat(array[4]);
         let N = parseFloat(array[5]);
