@@ -46,10 +46,13 @@ function parseDiff(lines,offList,out_data){
         if(offset > 2){
             out_data.larger_than_2m++;
         }
+        if(offset > 3){
+            out_data.larger_than_3m++;
+        }
         out_data.square_sum += square;
         offList.push(offset);
     }
-    offList.sort();
+    offList.sort(function(a,b){return a-b});
 };
 
 function createCDFMap(offList,map){
@@ -114,7 +117,8 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
         square_sum:0,
         ref_fix_count:0,
         rov_fix_count:0,
-        larger_than_2m:0
+        larger_than_2m:0,
+        larger_than_3m:0
     };
     let lines = content.toString().split('\n');
     parseDiff(lines,offList,out_data);
