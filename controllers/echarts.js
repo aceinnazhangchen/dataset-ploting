@@ -18,7 +18,7 @@ function getSetPath(set){
     return setPath;
 }
 
-function parseDiff(lines,offList,out_data){
+function parseDiff(lines,offList,out_data,set){
     for(let i = 0;i < lines.length;i++){
         if(lines[i].trim()==""){
             continue;
@@ -34,11 +34,10 @@ function parseDiff(lines,offList,out_data){
         }
         if(rov_fix == 4){
             out_data.rov_fix_count++;
-        }  
-        if(ref_fix != 4 || rov_fix <= 1){
+        }
+        if( (set != "tesla" && ref_fix != 4) || rov_fix <= 1){
             continue;
         }
-
         let E = parseFloat(array[4]);
         let N = parseFloat(array[5]);
         let square = E*E+N*N;
@@ -110,7 +109,7 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
     }
 }
 
- async function transFileToCDF(file_path,table_data,xAxis,series){
+ async function transFileToCDF(file_path,table_data,xAxis,series,set){
     let content = await file_sys.readFile(file_path);
     var offList = [];
     var out_data = {
@@ -121,7 +120,7 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
         larger_than_3m:0
     };
     let lines = content.toString().split('\n');
-    parseDiff(lines,offList,out_data);
+    parseDiff(lines,offList,out_data,set);
     var map = {0:0};
     createCDFMap(offList,map);
     generateTableData(map,offList,out_data,table_data,xAxis,series,lines.length);
@@ -153,7 +152,7 @@ var fn_cdf_echart = async (ctx, next) => {
         R68:0,
         R95:0,
     };
-    await transFileToCDF(file_path,table_data,xAxis,series);
+    await transFileToCDF(file_path,table_data,xAxis,series,ctx.query.set);
     await ctx.render('echart_cdf.html',{filename,version,xAxis,series,table_data});
 };
 
