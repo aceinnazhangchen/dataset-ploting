@@ -94,15 +94,19 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
     console.log(table_data);
     var last_y = 0;
     var last_k = 0;
+    var R68_index = Math.ceil(offList.length*0.68)
+    var R95_index = Math.ceil(offList.length*0.95)
+    table_data.R68 = (offList[R68_index]*100).toFixed(1);
+    table_data.R95 = (offList[R95_index]*100).toFixed(1);
     for (let k in map ) {
         let x = (100*k*interval).toFixed(1);
         let y = 100*map[k]/offList.length;
-        if(y >= 68 && table_data.R68 == 0){
-            table_data.R68 = x;  
-        }
-        if(y >= 95 && table_data.R95 == 0){
-            table_data.R95 = x;  
-        }
+        // if(y >= 68 && table_data.R68 == 0){
+        //     table_data.R68 = x;  
+        // }
+        // if(y >= 95 && table_data.R95 == 0){
+        //     table_data.R95 = x;  
+        // }
         last_y = y;
         last_k = k;
         xAxis.push(x);
