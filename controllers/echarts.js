@@ -27,17 +27,24 @@ function parseDiff(lines,offList,out_data,set){
         if(array.length != 15){
             continue;
         }
-        let ref_fix =  parseFloat(array[13]);
-        let rov_fix =  parseFloat(array[14]);
+        let ref_fix =  parseInt(array[13]);
+        let rov_fix =  parseInt(array[14]);
         if(ref_fix == 4){
             out_data.ref_fix_count++;
         }
         if(rov_fix == 4){
             out_data.rov_fix_count++;
         }
-        if( (set != "tesla" && ref_fix != 4) || rov_fix <= 1){
-            continue;
+        if(set == "tesla"){
+            if(ref_fix != 1 && ref_fix != 2 || rov_fix < 1){
+                continue;
+            }
+        }else{
+            if( ref_fix != 4 || rov_fix < 1){
+                continue;
+            }
         }
+
         let E = parseFloat(array[4]);
         let N = parseFloat(array[5]);
         let square = E*E+N*N;
