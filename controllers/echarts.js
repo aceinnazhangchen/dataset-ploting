@@ -107,10 +107,10 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series){
     console.log(table_data);
     var last_y = 0;
     var last_k = 0;
-    var R50_index = Math.ceil(offList.length*0.50)
-    var R68_index = Math.ceil(offList.length*0.68)
-    var R95_index = Math.ceil(offList.length*0.95)
-    var R99_index = Math.ceil(offList.length*0.99)
+    var R50_index = Math.floor(offList.length*0.50)
+    var R68_index = Math.floor(offList.length*0.68)
+    var R95_index = Math.floor(offList.length*0.95)
+    var R99_index = Math.floor(offList.length*0.99)
     table_data.R50 = (offList[R50_index]*100).toFixed(1);
     table_data.R68 = (offList[R68_index]*100).toFixed(1);
     table_data.R95 = (offList[R95_index]*100).toFixed(1);
