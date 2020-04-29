@@ -52,8 +52,8 @@ function parseDiff(lines,offList,out_data,set){
         if(offset > 2){
             out_data.larger_than_2m++;
         }
-        if(offset > 3){
-            out_data.larger_than_3m++;
+        if(offset > 5){
+            out_data.larger_than_5m++;
         }
         out_data.square_sum += square;
         offList.push(offset);
@@ -87,26 +87,24 @@ function createCDFMap(offList,map){
     }
 }
 
-function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
+function generateTableData(map,offList,out_data,table_data,xAxis,series){
     table_data.RMS = Math.sqrt(out_data.square_sum/offList.length).toFixed(3);
-    table_data.fixedRate = (out_data.rov_fix_count/len*100).toFixed(2);
-    table_data.gross_error = (out_data.larger_than_2m/(offList.length+out_data.larger_than_2m)*100).toFixed(2);
+    table_data.fixedRate = (out_data.rov_fix_count/out_data.total_count*100).toFixed(2);
+    //table_data.gross_error = (out_data.larger_than_2m/(offList.length)*100).toFixed(2);
     console.log(table_data);
     var last_y = 0;
     var last_k = 0;
+    var R50_index = Math.ceil(offList.length*0.50)
     var R68_index = Math.ceil(offList.length*0.68)
     var R95_index = Math.ceil(offList.length*0.95)
+    var R99_index = Math.ceil(offList.length*0.99)
+    table_data.R50 = (offList[R50_index]*100).toFixed(1);
     table_data.R68 = (offList[R68_index]*100).toFixed(1);
     table_data.R95 = (offList[R95_index]*100).toFixed(1);
+    table_data.R99 = (offList[R99_index]*100).toFixed(1);
     for (let k in map ) {
         let x = (100*k*interval).toFixed(1);
         let y = 100*map[k]/offList.length;
-        // if(y >= 68 && table_data.R68 == 0){
-        //     table_data.R68 = x;  
-        // }
-        // if(y >= 95 && table_data.R95 == 0){
-        //     table_data.R95 = x;  
-        // }
         last_y = y;
         last_k = k;
         xAxis.push(x);
@@ -127,14 +125,20 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series,len){
         square_sum:0,
         ref_fix_count:0,
         rov_fix_count:0,
+        total_count:0,
         larger_than_2m:0,
-        larger_than_3m:0
+        larger_than_5m:0
     };
     let lines = content.toString().split('\n');
+    out_data.total_count = lines.length;
     parseDiff(lines,offList,out_data,set);
     var map = {0:0};
     createCDFMap(offList,map);
-    generateTableData(map,offList,out_data,table_data,xAxis,series,lines.length);
+    generateTableData(map,offList,out_data,table_data,xAxis,series);
+    table_data.total_count = out_data.total_count;
+    table_data.rov_fix_count = out_data.rov_fix_count;
+    table_data.larger_than_2m = out_data.larger_than_2m;
+    table_data.larger_than_5m = out_data.larger_than_5m;
 }
 
 var fn_cdf_echart = async (ctx, next) => {
@@ -160,8 +164,12 @@ var fn_cdf_echart = async (ctx, next) => {
         RMS:0,
         fixedRate:0,
         gross_error:0,
+        R50:0,
         R68:0,
         R95:0,
+        R99:0,
+        larger_than_2m:0,
+        larger_than_5m:0
     };
     await transFileToCDF(file_path,table_data,xAxis,series,ctx.query.set);
     await ctx.render('echart_cdf.html',{filename,version,xAxis,series,table_data});

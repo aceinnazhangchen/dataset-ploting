@@ -11,8 +11,20 @@
             <td>{{table_data.RMS}}</td>
         </tr>
         <tr>
-            <td>Fixed</td>
+            <td>total</td>
+            <td>{{table_data.total_count}}</td>
+        </tr>
+        <tr>
+            <td>fixed</td>
+            <td>{{table_data.rov_fix_count}}</td>
+        </tr>
+        <tr>
+            <td>fixedrate</td>
             <td>{{table_data.fixedRate}}%</td>
+        </tr>
+        <tr>
+            <td>50%</td>
+            <td>{{table_data.R50}}</td>
         </tr>
         <tr>
             <td>68%</td>
@@ -23,9 +35,17 @@
             <td>{{table_data.R95}}</td>
         </tr>
         <tr>
+            <td>99%</td>
+            <td>{{table_data.R99}}</td>
+        </tr>
+        <tr>
             <td>>2m</td>
-            <td>{{table_data.gross_error}}%</td>
-        </tr>        
+            <td>{{table_data.larger_than_2m}}</td>
+        </tr>
+        <tr>
+            <td>>5m</td>
+            <td>{{table_data.larger_than_5m}}</td>
+        </tr>       
       </table> 
     </div>
     <div id="main" style="height: 100%;width:98%;float:left;"></div>
