@@ -88,9 +88,9 @@
                         formatter: function (params) {
                             console.log(params);
                             return params[0].name + 'cm '+ '</br>' +
-                            'fix:' + parseFloat(params[0].value).toFixed(2) + "%" + '</br>' +
-                            'nofix:' + parseFloat(params[1].value).toFixed(2) + "%" + '</br>' +
-                            'all:' + parseFloat(params[2].value).toFixed(2) + "%" ;
+                            'all:' + parseFloat(params[0].value).toFixed(2) + "%" + '</br>' +
+                            'fix:' + parseFloat(params[1].value).toFixed(2) + "%" + '</br>' +
+                            'nofix:' + parseFloat(params[2].value).toFixed(2) + "%" ;
                         }
                     },
                     toolbox: {
