@@ -18,7 +18,7 @@ function getSetPath(set){
     return setPath;
 }
 
-function parseDiff(lines,offList,out_data,set){
+function parseDiff(lines,offList,out_data,set,rov_filter){
     for(let i = 0;i < lines.length;i++){
         if(lines[i].trim()==""){
             continue;
@@ -36,11 +36,24 @@ function parseDiff(lines,offList,out_data,set){
             out_data.rov_fix_count++;
         }
         if(set == "tesla"){
-            if(ref_fix != 1 && ref_fix != 2 || rov_fix < 1){
+            if(ref_fix != 1 && ref_fix != 2){
                 continue;
             }
         }else{
-            if( ref_fix != 4 || rov_fix < 1){
+            if( ref_fix != 4){
+                continue;
+            }
+        }
+        if(rov_fix < 1){
+            continue;
+        }
+        if(rov_filter == "fix"){
+            if(rov_fix != 4){
+                continue;
+            }
+        }
+        if(rov_filter == "nofix"){
+            if(rov_fix == 4){
                 continue;
             }
         }
@@ -118,7 +131,7 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series){
     }
 }
 
- async function transFileToCDF(file_path,table_data,xAxis,series,set){
+ async function transFileToCDF(file_path,table_data,xAxis,series,set,rov_filter){
     let content = await file_sys.readFile(file_path);
     var offList = [];
     var out_data = {
@@ -131,7 +144,7 @@ function generateTableData(map,offList,out_data,table_data,xAxis,series){
     };
     let lines = content.toString().split('\n');
     out_data.total_count = lines.length;
-    parseDiff(lines,offList,out_data,set);
+    parseDiff(lines,offList,out_data,set,rov_filter);
     var map = {0:0};
     createCDFMap(offList,map);
     generateTableData(map,offList,out_data,table_data,xAxis,series);
@@ -158,21 +171,55 @@ var fn_cdf_echart = async (ctx, next) => {
         await ctx.render('error.html', {title: 'error',msg});
         return;
     }
-    var xAxis = [];
-    var series = [];
-    var table_data = {
-        RMS:0,
-        fixedRate:0,
-        gross_error:0,
-        R50:0,
-        R68:0,
-        R95:0,
-        R99:0,
-        larger_than_2m:0,
-        larger_than_5m:0
-    };
-    await transFileToCDF(file_path,table_data,xAxis,series,ctx.query.set);
-    await ctx.render('echart_cdf.html',{filename,version,xAxis,series,table_data});
+    var xAxis_1 = [];
+    var xAxis_2 = [];
+    var xAxis_3 = [];
+    var series_1 = [];
+    var series_2 = [];
+    var series_3 = [];
+    var table_data_1 = {};
+    var table_data_2 = {};
+    var table_data_3 = {};
+    await transFileToCDF(file_path,table_data_1,xAxis_1,series_1,ctx.query.set,"all");
+    await transFileToCDF(file_path,table_data_2,xAxis_2,series_2,ctx.query.set,"fix");
+    await transFileToCDF(file_path,table_data_3,xAxis_3,series_3,ctx.query.set,"nofix");
+    await ctx.render('echart_cdf.html',{filename,version,xAxis_1,series_1,series_2,series_3,table_data_1});
+};
+
+var fn_cep_echart = async (ctx, next) => {
+    var setPath = getSetPath(ctx.query.set);
+    var version = ctx.query.ver;
+    var filename = ctx.query.file;
+    if(filename == undefined){
+        let msg = "No file name!";
+        await ctx.render('error.html', {title: 'error',msg});
+        return;
+    }
+    var parent = ctx.query.parent || "";
+    var file_path = path.join(setPath,version,parent,filename);
+    let exist = await file_sys.fileExists(file_path);
+    if (!exist){
+        let msg = "Can't find file "+ filename + " !";
+        await ctx.render('error.html', {title: 'error',msg});
+        return;
+    }
+    var xAxis_1 = [];
+    var xAxis_2 = [];
+    var xAxis_3 = [];
+    var series_1 = [];
+    var series_2 = [];
+    var series_3 = [];
+    var table_data_1 = {};
+    var table_data_2 = {};
+    var table_data_3 = {};
+    await transFileToCDF(file_path,table_data_1,xAxis_1,series_1,ctx.query.set,"all");
+    await transFileToCDF(file_path,table_data_2,xAxis_2,series_2,ctx.query.set,"fix");
+    await transFileToCDF(file_path,table_data_3,xAxis_3,series_3,ctx.query.set,"nofix");
+    var xAxis_cep = ['50%','68%','95%','99%'];
+    var series_cep_1 = [table_data_1.R50,table_data_1.R68,table_data_1.R95,table_data_1.R99];
+    var series_cep_2 = [table_data_2.R50,table_data_2.R68,table_data_2.R95,table_data_2.R99];
+    var series_cep_3 = [table_data_3.R50,table_data_3.R68,table_data_3.R95,table_data_3.R99];
+    await ctx.render('echart_cep.html',{filename,version,xAxis_cep,series_cep_1,series_cep_2,series_cep_3});
 };
 
 var fn_sd_echart = async (ctx, next) => {
@@ -282,6 +329,7 @@ var fn_compare = async (ctx, next) => {
 
 module.exports = {
     'GET /cdf': fn_cdf_echart,
+    'GET /cep': fn_cep_echart,
     'GET /sd': fn_sd_echart,
     'GET /compare':fn_compare
 };

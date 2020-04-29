@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">     
+
+    <div id="main" style="height: 100%;width:100%;float:left;"></div>
+
+        <script type="text/javascript" src="/static/js/echarts-en.min.js"></script>
+        <script type="text/javascript">
+            var myChart = echarts.init(document.getElementById('main'));
+                var axis_x = '{{xAxis_cep}}';
+                var axis_y_1 = '{{series_cep_1}}';
+                var axis_y_2 = '{{series_cep_2}}';
+                var axis_y_3 = '{{series_cep_3}}';
+                var xAxis = axis_x.split(',');
+                var series_1 = axis_y_1.split(',');
+                var series_2 = axis_y_2.split(',');
+                var series_3 = axis_y_3.split(',');
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '{{filename}}',
+                        subtext: 'version: {{version}}',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    legend: {
+                        data: ['all','fix', 'nofix'],
+                        left: 10
+                    },
+                    xAxis: {
+                        name:"percent(%)",
+                        data:xAxis,
+                        splitLine:{show: false},//去除网格线
+                        type : 'category',
+                        splitArea : {show : true}//保留网格区域
+                    },
+                    yAxis: {
+                        name:"error(cm)",
+                        splitLine:{show: false},//去除网格线
+                        type : 'value',
+                        splitArea : {show : true}//保留网格区域
+                    },
+                    series: [{
+                        name: 'all',
+                        type: 'bar',
+                        barGap: 0,
+                        color:'#fe8104',
+                        showSymbol: false,
+                        data: series_1
+                    },
+                    {
+                        name: 'fix',
+                        type: 'bar',
+                        color:'#12e78c',
+                        showSymbol: false,
+                        data: series_2
+                    },
+                    {
+                        name: 'nofix',
+                        type: 'bar',
+                        color:'#fa4343',
+                        showSymbol: false,
+                        data: series_3
+                    }]
+                };
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+                window.onresize = function () {
+                    myChart.resize();
+                }
+        </script>
+   </body>
+</html>

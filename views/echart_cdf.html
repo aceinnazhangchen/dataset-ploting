@@ -8,43 +8,43 @@
     <table border="1" style="margin-left: 8px;margin-top: 80px">
         <tr>
             <td>RMS</td>
-            <td>{{table_data.RMS}}</td>
+            <td>{{table_data_1.RMS}}</td>
         </tr>
         <tr>
             <td>total</td>
-            <td>{{table_data.total_count}}</td>
+            <td>{{table_data_1.total_count}}</td>
         </tr>
         <tr>
             <td>fixed</td>
-            <td>{{table_data.rov_fix_count}}</td>
+            <td>{{table_data_1.rov_fix_count}}</td>
         </tr>
         <tr>
             <td>fixedrate</td>
-            <td>{{table_data.fixedRate}}%</td>
+            <td>{{table_data_1.fixedRate}}%</td>
         </tr>
         <tr>
             <td>50%</td>
-            <td>{{table_data.R50}}</td>
+            <td>{{table_data_1.R50}}</td>
         </tr>
         <tr>
             <td>68%</td>
-            <td>{{table_data.R68}}</td>
+            <td>{{table_data_1.R68}}</td>
         </tr>
         <tr>
             <td>95%</td>
-            <td>{{table_data.R95}}</td>
+            <td>{{table_data_1.R95}}</td>
         </tr>
         <tr>
             <td>99%</td>
-            <td>{{table_data.R99}}</td>
+            <td>{{table_data_1.R99}}</td>
         </tr>
         <tr>
             <td>>2m</td>
-            <td>{{table_data.larger_than_2m}}</td>
+            <td>{{table_data_1.larger_than_2m}}</td>
         </tr>
         <tr>
             <td>>5m</td>
-            <td>{{table_data.larger_than_5m}}</td>
+            <td>{{table_data_1.larger_than_5m}}</td>
         </tr>       
       </table> 
     </div>
@@ -53,10 +53,14 @@
         <script type="text/javascript" src="/static/js/echarts-en.min.js"></script>
         <script type="text/javascript">
             var myChart = echarts.init(document.getElementById('main'));
-                var data1 = '{{xAxis}}';
-                var data2 = '{{series}}';
-                var xAxis = data1.split(',');
-                var series = data2.split(',');
+                var axis_x = '{{xAxis_1}}';
+                var axis_y_1 = '{{series_1}}';
+                var axis_y_2 = '{{series_2}}';
+                var axis_y_3 = '{{series_3}}';
+                var xAxis = axis_x.split(',');
+                var series_1 = axis_y_1.split(',');
+                var series_2 = axis_y_2.split(',');
+                var series_3 = axis_y_3.split(',');
                 // 指定图表的配置项和数据
                 var option = {
                     title: {
@@ -82,13 +86,21 @@
                             }
                         },
                         formatter: function (params) {
-                            return params[0].name + 'cm <br />' + parseFloat(params[0].value).toFixed(2) + "%";
+                            console.log(params);
+                            return params[0].name + 'cm '+ '</br>' +
+                            'fix:' + parseFloat(params[0].value).toFixed(2) + "%" + '</br>' +
+                            'nofix:' + parseFloat(params[1].value).toFixed(2) + "%" + '</br>' +
+                            'all:' + parseFloat(params[2].value).toFixed(2) + "%" ;
                         }
                     },
                     toolbox: {
                         feature: {
                             saveAsImage: {}
                         }
+                    },
+                    legend: {
+                        data: ['all','fix', 'nofix'],
+                        left: 10
                     },
                     xAxis: {
                         name:"error(cm)",
@@ -105,10 +117,25 @@
                         splitArea : {show : true}//保留网格区域
                     },
                     series: [{
-                        name: 'percent',
+                        name: 'all',
                         type: 'line',
+                        color:'#fe8104',
                         showSymbol: false,
-                        data: series
+                        data: series_1
+                    },
+                    {
+                        name: 'fix',
+                        type: 'line',
+                        color:'#12e78c',
+                        showSymbol: false,
+                        data: series_2
+                    },
+                    {
+                        name: 'nofix',
+                        type: 'line',
+                        color:'#fa4343',
+                        showSymbol: false,
+                        data: series_3
                     }]
                 };
 
