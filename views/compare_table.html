@@ -6,19 +6,29 @@
                 <tr>
                     <td>version</td>
                     <td>RMS</td>
+                    <td>total</td>
+                    <td>fixed</td>
                     <td>fixedRate</td>
+                    <td>50%</td>
                     <td>68%</td>
                     <td>95%</td>
+                    <td>99%</td>
                     <td>>2m</td>
+                    <td>>5m</td>
                 </tr>
                 {% for item in table %}
                 <tr>
                     <td>{{ item.version }},</td>
                     <td>{{ item.RMS }},</td>
-                    <td>{{ item.fixedRate }},</td>
+                    <td>{{ item.total_count}}</td>
+                    <td>{{ item.rov_fix_count}}</td>
+                    <td>{{ item.fixedRate }}%,</td>
+                    <td>{{ item.R50 }},</td>
                     <td>{{ item.R68 }},</td>
                     <td>{{ item.R95 }},</td>
-                    <td>{{ item.gross_error }}</td>
+                    <td>{{ item.R99 }},</td>
+                    <td>{{ item.larger_than_2m }}</td>
+                    <td>{{ item.larger_than_5m }}</td>
                 </tr>
                 {% endfor %}
             </table>
