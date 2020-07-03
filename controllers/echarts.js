@@ -44,7 +44,7 @@ function parseDiff(lines,offList,out_data,set,rov_filter){
                 continue;
             }
         }
-        if(rov_fix < 1){
+        if(rov_fix < 2){
             continue;
         }
         if(rov_filter == "fix"){
@@ -222,28 +222,10 @@ var fn_cep_echart = async (ctx, next) => {
     await ctx.render('echart_cep.html',{filename,version,xAxis_cep,series_cep_1,series_cep_2,series_cep_3});
 };
 
-var fn_sd_echart = async (ctx, next) => {
-    var setPath = getSetPath(ctx.query.set);
-    var version = ctx.query.ver;
-    var filename = ctx.query.file;
-    if(filename == undefined){
-        let msg = "No file name!";
-        await ctx.render('error.html', {title: 'error',msg});
-        return;
-    }
-    var parent = ctx.query.parent || "";
-    var file_path = path.join(setPath,version,parent,filename);
-    let exist = await file_sys.fileExists(file_path);
-    if (!exist){
-        let msg = "Can't find file "+ filename + " !";
-        await ctx.render('error.html', {title: 'error',msg});
-        return;
-    }
-    let content = await file_sys.readFile(file_path);
+async function parse_dif_file_to_array(file,xAxis,series){
+    let content = await file_sys.readFile(file);
     let lines = content.toString().split('\n');
 
-    var offList = [];
-    var timeList = [];
     for(let i = 0;i < lines.length;i++){
         if(lines[i].trim()==""){
             continue;
@@ -263,9 +245,10 @@ var fn_sd_echart = async (ctx, next) => {
         let square = E*E+N*N;
         let offset = Math.sqrt(square);
         if(offset > 5){
-           continue;
+           //continue;
+           offset = 0;
         }
-        offList.push(offset);
+        series.push(offset);
 
         let time = array[1].split('.')[0].trim();
         if(time.length < 6){
@@ -273,12 +256,66 @@ var fn_sd_echart = async (ctx, next) => {
             time = zero.substr(0,6-time.length)+time;
         }
         let timef = time.substr(0,2)+":"+time.substr(2,2)+":"+time.substr(4,2)
-        timeList.push(timef);
+        xAxis.push(timef);
+    }
+}
+
+var fn_sd_echart = async (ctx, next) => {
+    var setPath = getSetPath(ctx.query.set);
+    var version = ctx.query.ver;
+    var filename = ctx.query.file;
+    if(filename == undefined){
+        let msg = "No file name!";
+        await ctx.render('error.html', {title: 'error',msg});
+        return;
+    }
+    var parent = ctx.query.parent || "";
+    var file_path = path.join(setPath,version,parent,filename);
+    let exist = await file_sys.fileExists(file_path);
+    if (!exist){
+        let msg = "Can't find file "+ filename + " !";
+        await ctx.render('error.html', {title: 'error',msg});
+        return;
     }
 
-    xAxis = timeList;
-    series = offList;
+    var xAxis = [];
+    var series = [];
+    await parse_dif_file_to_array(file_path,xAxis,series);
+
     await ctx.render('echart_sd.html',{filename,version,xAxis,series});
+};
+
+var fn_dy_sd_echart = async (ctx, next) => {
+    var setPath = getSetPath(ctx.query.set);
+    var version = ctx.query.ver;
+    var filename = ctx.query.file;
+    if(filename == undefined){
+        let msg = "No file name!";
+        await ctx.render('error.html', {title: 'error',msg});
+        return;
+    }
+    var parent = ctx.query.parent || "";
+    var file_path = path.join(setPath,version,parent,filename);
+    let exist = await file_sys.fileExists(file_path);
+    if (!exist){
+        let msg = "Can't find file "+ filename + " !";
+        await ctx.render('error.html', {title: 'error',msg});
+        return;
+    }
+    var filename1 = "CPT7-2020_06_22_13_19_28--openrtk_01-new.dif"
+    var file_path1 = path.join(setPath,version,parent,filename1);
+    var xAxis1 = [];
+    var series1 = [];
+    var filename2 = "CPT7-2020_06_22_13_19_28--ublox_f9p_01.dif"
+    var file_path2 = path.join(setPath,version,parent,filename2);
+    var xAxis2 = [];
+    var series2 = [];
+    await parse_dif_file_to_array(file_path1,xAxis1,series1);
+    await parse_dif_file_to_array(file_path2,xAxis2,series2);
+    console.log(xAxis1.length);
+    console.log(xAxis2.length);
+
+    await ctx.render('echart_sd_dynamic.html',{filename,version,xAxis1,series1,series2});
 };
 
 var fn_compare = async (ctx, next) => {
@@ -327,9 +364,15 @@ var fn_compare = async (ctx, next) => {
     }
 }
 
+var dynamic_data = async (ctx, next) => {
+
+    await ctx.render('dynamic_data.html',{});
+}
+
 module.exports = {
     'GET /cdf': fn_cdf_echart,
     'GET /cep': fn_cep_echart,
     'GET /sd': fn_sd_echart,
-    'GET /compare':fn_compare
+    'GET /compare':fn_compare,
+    'GET /dynamic_data':dynamic_data
 };

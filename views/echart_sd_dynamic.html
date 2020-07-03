@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+        <div id="main" style="height: 100%"></div>
+        <script type="text/javascript" src="/static/js/echarts-en.min.js"></script>
+        <script type="text/javascript">
+            var myChart = echarts.init(document.getElementById('main'));
+                var xAxis1 = '{{xAxis1}}'.split(',');
+                var series1 = '{{series1}}'.split(',');
+                var series2 = '{{series2}}'.split(',');
+
+                var xAxis = [];
+                var series_1 = [];
+                var series_2 = [];
+                var index = 0;
+                for(;index < 120;index++){
+                    xAxis.push(xAxis1[index]);
+                    series_1.push(series1[index]);
+                    series_2.push(series2[index]);
+                }
+
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '{{filename}}',
+                        subtext: 'version: {{version}}',
+                        left: 'center'
+                    },
+                    legend: {
+                        data: ['openrtk','ublox'],
+                        left: 10
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            animation: false,
+                            label: {
+                                backgroundColor: '#ccc',
+                                borderColor: '#aaa',
+                                borderWidth: 1,
+                                shadowBlur: 0,
+                                shadowOffsetX: 0,
+                                shadowOffsetY: 0,
+                                textStyle: {
+                                    color: '#222'
+                                }
+                            }
+                        },
+                        formatter: function (params) {
+                            return parseFloat(params[0].name).toFixed(1) + ' time <br />' + parseFloat(params[0].value).toFixed(2) + "m";
+                        }
+                    },
+                    xAxis: {
+                        name:"time",
+                        boundaryGap: false,
+                        data:xAxis,
+                        splitLine:{show: false},//去除网格线
+                        type:'category',
+                        splitArea : {show : true}//保留网格区域
+                    },
+                    yAxis: {
+                        name:"error(m)",
+                        boundaryGap: ['20%','20%'],
+                        splitLine:{show: false},//去除网格线
+                        type : 'value',
+                        splitArea : {show : true}//保留网格区域
+                    },
+                    series: [{
+                        name: 'openrtk',
+                        type: 'line',
+                        color:'blue',
+                        showSymbol: false,
+                        hoverAnimation: false,
+                        data: series_1
+                    },
+                    {
+                        name: 'ublox',
+                        type: 'line',
+                        color:'red',
+                        showSymbol: false,
+                        hoverAnimation: false,
+                        data: series_2
+                    }]
+                };
+
+                setInterval(function () {
+                    if(xAxis.length >= 120){
+                        xAxis.shift();
+                        series_1.shift();
+                        series_2.shift();
+                    }
+                    index++;
+                    if(index >= xAxis1.length) return;
+                    xAxis.push(xAxis1[index]);
+                    series_1.push(series1[index]);
+                    series_2.push(series2[index]);
+  
+                    myChart.setOption({
+                        xAxis: {
+                            data:xAxis,
+                        },
+                        series: [{
+                            data: series_1
+                        },
+                        {
+                            data: series_2
+                        }]
+                    });
+                }, 1000);
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+                window.onresize = function () {
+                    myChart.resize();
+                }
+        </script>
+   </body>
+</html>
